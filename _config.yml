@@ -14,11 +14,11 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Repository
-email:
+email: liu.yuxu@husky.neu.edu
 description: >- # this means to ignore newlines until "baseurl:"
   My personal homepage for sharing my thoughts.
-twitter_username: username
-github_username: username
+twitter_username: noname
+github_username: yliu-fort
 minimal_mistakes_skin: sunrise
 search: true
 
@@ -58,14 +58,14 @@ plugins:
 author:
   name   : "Y L"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "I am a passionate PhD student in ocean and machine learning field."
+  bio    : "I am a passionate PhD student."
   links:
     - label: "Email"
       icon: "far fa-fw fa-envelope"
       url: "mailto:liu.yuxu@husky.neu.edu"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
+      url: "https://github.com/yliu-fort"
 
 footer:
   links:
@@ -74,7 +74,7 @@ footer:
       url: "mailto:liu.yuxu@husky.neu.edu"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
+      url: "https://github.com/yliu-fort"
 
 defaults:
   # _posts
