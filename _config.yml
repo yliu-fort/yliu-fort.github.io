@@ -61,7 +61,7 @@ author:
   bio    : "I am a passionate PhD student in ocean and machine learning field."
   links:
     - label: "Email"
-      icon: "fas fa-fw fa-envelope-o"
+      icon: "far fa-fw fa-envelope"
       url: "liu.yuxu@husky.neu.edu"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
@@ -70,7 +70,7 @@ author:
 footer:
   links:
     - label: "Email"
-      icon: "fas fa-fw fa-envelope-o"
+      icon: "far fa-fw fa-envelope"
       url: "liu.yuxu@husky.neu.edu"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
