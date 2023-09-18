@@ -62,7 +62,7 @@ author:
   links:
     - label: "Email"
       icon: "far fa-fw fa-envelope"
-      url: "liu.yuxu@husky.neu.edu"
+      url: "mailto:liu.yuxu@husky.neu.edu"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/"
@@ -71,7 +71,7 @@ footer:
   links:
     - label: "Email"
       icon: "far fa-fw fa-envelope"
-      url: "liu.yuxu@husky.neu.edu"
+      url: "mailto:liu.yuxu@husky.neu.edu"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/"
