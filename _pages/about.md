@@ -3,6 +3,17 @@ permalink: /about/
 title: "About"
 ---
 
-Tempor velit sint sunt ipsum tempor enim ad qui ullamco. Est dolore anim ad velit duis dolore minim sunt aliquip amet commodo labore. Ut eu pariatur aute ea aute excepteur laborum. Esse ea esse excepteur minim mollit qui cillum excepteur ex dolore magna. Labore deserunt fugiat incididunt incididunt sint ea. Consequat dolore aute laboris quis proident quis non et est consectetur ex eiusmod sit culpa.
+Hi, I'm Jane Doe. I am a Software Engineer based in San Francisco.
 
-Cupidatat ea do et in excepteur in. Ad nostrud ut est esse eu duis ea sunt eiusmod. Aliquip tempor veniam sint elit fugiat. Velit incididunt laboris amet incididunt labore dolore irure velit excepteur commodo deserunt laborum. Consectetur eu fugiat veniam veniam Lorem labore magna eiusmod. Ea occaecat reprehenderit pariatur consectetur minim labore ut aliquip.
+I have over 10 years of experience building scalable web applications. My interests include distributed systems, cloud computing, and open source software.
+
+When I'm not coding, I enjoy hiking, photography, and reading sci-fi novels.
+
+## Skills
+
+*   **Languages**: Python, Go, JavaScript, Ruby
+*   **Technologies**: Docker, Kubernetes, AWS, React, Django
+
+## Contact
+
+Feel free to reach out to me via [email](mailto:jane.doe@example.com) or connect with me on [Twitter](https://twitter.com/janedoe).
