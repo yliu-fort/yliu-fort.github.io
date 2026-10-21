@@ -1,0 +1,20 @@
+{%- assign p = include.pub -%}
+{%- if p.doi -%}
+  {%- assign href = "https://doi.org/" | append: p.doi -%}
+  {%- assign label = "DOI" -%}
+{%- else -%}
+  {%- assign href = p.url -%}
+  {%- assign label = p.link_label | default: "Link" -%}
+{%- endif -%}
+<li class="pub">
+  <p class="pub__title">
+    {%- if href %}<a href="{{ href }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif -%}
+  </p>
+  <p class="pub__authors">{{ p.authors | replace: "Y. Liu", "<strong>Y. Liu</strong>" }}</p>
+  <p class="pub__venue">
+    {%- if p.venue %}<em>{{ p.venue }}</em>{% if p.locator %}, {{ p.locator }}{% endif %}{% endif -%}
+    {%- if p.status %}{{ p.status }}{% endif -%}
+    {%- if p.year %} ({{ p.year }}){% endif -%}
+    {%- if href %} · <a href="{{ href }}">{{ label }}</a>{% endif -%}
+  </p>
+</li>

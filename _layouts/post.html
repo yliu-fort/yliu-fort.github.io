@@ -1,0 +1,58 @@
+---
+layout: default
+---
+{%- assign words = content | strip_html | number_of_words -%}
+{%- assign minutes = words | divided_by: 220 | at_least: 1 -%}
+{%- assign lb = "{" -%}{%- assign rb = "}" -%}
+<article class="post">
+  <header class="post__header">
+    <h1 class="post__title">{{ page.title }}</h1>
+    {%- if page.description %}
+    <p class="post__subtitle">{{ page.description }}</p>
+    {%- endif %}
+    <p class="post__meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %B %Y" }}</time>
+      {%- if page.last_modified_at %}<span> · updated {{ page.last_modified_at | date: "%-d %B %Y" }}</span>{% endif %}
+      <span> · {{ minutes }} min read</span>
+      {%- if page.tags.size > 0 %}
+      <span> · {% for tag in page.tags %}<a href="{{ '/blog/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+      {%- endif %}
+    </p>
+  </header>
+
+  {%- if page.toc %}
+  <nav class="toc" aria-label="Contents" data-toc>
+    <p class="toc__title">Contents</p>
+  </nav>
+  {%- endif %}
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  <footer class="post__footer">
+    {%- if page.cite %}
+    <details class="cite">
+      <summary>Cite this post</summary>
+<pre><code>@misc{{ lb }}liu{{ page.date | date: "%Y" }}{{ page.slug | split: "-" | first }},
+  author       = {{ lb }}Liu, Yuxuan{{ rb }},
+  title        = {{ lb }}{{ page.title }}{{ rb }},
+  year         = {{ lb }}{{ page.date | date: "%Y" }}{{ rb }},
+  howpublished = {{ lb }}\url{{ lb }}{{ page.url | absolute_url }}{{ rb }}{{ rb }},
+  note         = {{ lb }}Blog post{{ rb }}
+{{ rb }}</code></pre>
+    </details>
+    {%- endif %}
+
+    {%- if page.previous or page.next %}
+    <nav class="post-nav" aria-label="More posts">
+      {%- if page.previous %}
+      <a class="post-nav__prev" href="{{ page.previous.url | relative_url }}"><span>Previous</span>{{ page.previous.title }}</a>
+      {%- endif %}
+      {%- if page.next %}
+      <a class="post-nav__next" href="{{ page.next.url | relative_url }}"><span>Next</span>{{ page.next.title }}</a>
+      {%- endif %}
+    </nav>
+    {%- endif %}
+  </footer>
+</article>

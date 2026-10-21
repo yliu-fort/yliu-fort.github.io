@@ -1,0 +1,10 @@
+{%- comment -%}
+  Figure with an optional caption (Markdown and math allowed) and width.
+  {% include figure.html src="/assets/posts/my-post/fig.png" alt="..." caption="..." width="80%" %}
+{%- endcomment -%}
+<figure class="figure">
+  <img src="{{ include.src | relative_url }}" alt="{{ include.alt | default: include.caption | strip_html | escape }}" loading="lazy"{% if include.width %} style="width: {{ include.width }}"{% endif %}>
+  {%- if include.caption %}
+  <figcaption>{{ include.caption | markdownify | remove: "<p>" | remove: "</p>" | strip }}</figcaption>
+  {%- endif %}
+</figure>

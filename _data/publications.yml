@@ -1,0 +1,84 @@
+# Newest first. Metadata checked against Crossref, arXiv and ORCID.
+# Link with `doi`, or with `url` + `link_label`. `selected: true` puts an entry on the home page.
+preprints:
+  - year: 2026
+    title: "First Passage Attention"
+    authors: "Y. Liu"
+    venue: "arXiv preprint"
+    locator: "arXiv:2610.22714 [cs.CL]"
+    url: https://arxiv.org/abs/2610.22714
+    link_label: arXiv
+    selected: true
+
+articles:
+  - year: 2026
+    title: "A hybrid ML–PDE framework for predicting breaking ocean waves"
+    authors: "Y. Liu, T. A. A. Adcock, T. S. van den Bremer, D. Eeltink"
+    venue: "Journal of Geophysical Research: Machine Learning and Computation"
+    locator: "3, e2026JH001251"
+    doi: 10.1029/2026JH001251
+    selected: true
+
+  - year: 2026
+    title: "A dynamic programming algorithm for optimal control of tidal range schemes"
+    authors: "Y. Liu, M.-Y. Lam, R. Ahmadian"
+    venue: "Renewable Energy"
+    locator: "265, 125599"
+    doi: 10.1016/j.renene.2026.125599
+    selected: true
+
+  - year: 2025
+    title: "Internal wave generation in evanescent regions with variable stratification in experiments, simulations, and linear theory"
+    authors: "A. Lee, K. Hakes, J. Crockett, Y. Liu, M. R. Allshouse"
+    venue: "Experiments in Fluids"
+    locator: "66, 191"
+    doi: 10.1007/s00348-025-04115-9
+
+  - year: 2024
+    title: "A machine learning architecture for including wave breaking in envelope-type wave models"
+    authors: "Y. Liu, D. Eeltink, T. S. van den Bremer, T. A. A. Adcock"
+    venue: "Ocean Engineering"
+    locator: "305, 118009"
+    doi: 10.1016/j.oceaneng.2024.118009
+    selected: true
+
+  - year: 2024
+    title: "Numerical simulation of deep-water wave breaking using RANS: comparison with experiments"
+    authors: "Y. Liu, T. S. van den Bremer, T. A. A. Adcock"
+    venue: "European Journal of Mechanics – B/Fluids"
+    locator: "108, 211–225"
+    doi: 10.1016/j.euromechflu.2024.08.003
+
+  - year: 2023
+    title: "Comparison of breaking models in envelope-based surface gravity wave evolution equations"
+    authors: "Y. Liu, D. Eeltink, T. Tang, D. Barratt, Y. Li, T. A. A. Adcock, T. S. van den Bremer"
+    venue: "Physical Review Fluids"
+    locator: "8, 054803"
+    doi: 10.1103/PhysRevFluids.8.054803
+    selected: true
+
+  - year: 2020
+    title: "Evanescent to propagating internal waves in experiments, simulations, and linear theory"
+    authors: "A. Lee, K. Hakes, Y. Liu, M. R. Allshouse, J. Crockett"
+    venue: "Experiments in Fluids"
+    locator: "61, 252"
+    doi: 10.1007/s00348-020-03077-4
+
+  - year: 2020
+    title: "Computational modeling of bubbles growth using the coupled level set–volume of fluid method"
+    authors: "A. Taqieddin, Y. Liu, A. N. Alshawabkeh, M. R. Allshouse"
+    venue: "Fluids"
+    locator: "5(3), 120"
+    doi: 10.3390/fluids5030120
+
+submitted:
+  - title: "A tabular method for optimal feedback control of tidal range schemes"
+    authors: "Y. Liu, M.-Y. Lam, R. Ahmadian"
+
+conference:
+  - year: 2025
+    title: "A dynamical programming algorithm for optimal control of tidal range schemes"
+    authors: "Y. Liu, M.-Y. Lam, R. Ahmadian"
+    venue: "Proceedings of the 41st IAHR World Congress, Singapore"
+    locator: "1544–1551"
+    doi: 10.64697/978-90-835589-7-4_41wc-p1730-cd

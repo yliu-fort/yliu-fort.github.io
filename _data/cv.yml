@@ -1,0 +1,42 @@
+positions:
+  - when: "2024 — 2026"
+    role: "Research Associate & Visiting Scholar"
+    org: "School of Engineering, Cardiff University"
+    place: "Cardiff, UK"
+    note: "Optimal control of tidal range schemes; long-horizon tidal energy resource assessment."
+
+  - when: "2020"
+    role: "Research Assistant"
+    org: "Laboratoire de Mécanique des Fluides de Lille (CNRS)"
+    place: "Villeneuve d'Ascq, France"
+    note: "Vectorised Maxey–Riley solver for millions of inertial particles in turbulence, with Prof. J. C. Vassilicos."
+
+  - when: "2018 — 2019"
+    role: "Research collaboration"
+    org: "Northeastern University"
+    place: "Boston, USA"
+    note: "Stratified-flow solver in OpenFOAM for internal waves, validated against Stanford's CDP code; with Prof. M. R. Allshouse."
+
+education:
+  - when: "2020 — 2025"
+    role: "DPhil, Engineering Science"
+    org: "University of Oxford"
+    place: "Oxford, UK"
+    note: "Data-driven modelling of nonlinear surface waves and machine-learning closures for wave breaking. Supervised by Prof. Thomas Adcock and Prof. Ton van den Bremer."
+
+  - when: "2016 — 2018"
+    role: "M.S., Mechanical Engineering"
+    org: "Northeastern University"
+    place: "Boston, USA"
+    note: "MIE Chair's Fellowship."
+
+  - when: "2012 — 2016"
+    role: "B.S., Power and Energy Engineering"
+    org: "Huazhong University of Science and Technology"
+    place: "Wuhan, China"
+    note: "Marie Curie Scholarship (EU Horizon 2020)."
+
+talks:
+  - when: "Jun 2025"
+    what: "A dynamic programming algorithm for optimal control of tidal range schemes"
+    where: "41st IAHR World Congress, Singapore"

@@ -1,0 +1,11 @@
+{%- assign i = include.item -%}
+<li class="cv-row">
+  <span class="cv-row__when">{{ i.when }}</span>
+  <div class="cv-row__what">
+    <p class="cv-row__role">{{ i.role }}</p>
+    <p class="cv-row__org">{{ i.org }}, {{ i.place }}</p>
+    {%- if i.note %}
+    <p class="cv-row__note">{{ i.note }}</p>
+    {%- endif %}
+  </div>
+</li>

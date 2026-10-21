@@ -1,0 +1,29 @@
+---
+title: Publications
+permalink: /publications/
+---
+{%- assign pubs = site.data.publications %}
+<p class="page-links">
+  <a href="https://scholar.google.com/citations?user={{ site.links.scholar }}">Google Scholar</a>
+  <a href="https://orcid.org/{{ site.links.orcid }}">ORCID</a>
+</p>
+
+<h2>Preprints</h2>
+<ol class="pub-list">
+  {%- for p in pubs.preprints %}{% include publication.html pub=p %}{% endfor %}
+</ol>
+
+<h2>Journal articles</h2>
+<ol class="pub-list">
+  {%- for p in pubs.articles %}{% include publication.html pub=p %}{% endfor %}
+</ol>
+
+<h2>Under review</h2>
+<ol class="pub-list">
+  {%- for p in pubs.submitted %}{% include publication.html pub=p %}{% endfor %}
+</ol>
+
+<h2>Conference papers</h2>
+<ol class="pub-list">
+  {%- for p in pubs.conference %}{% include publication.html pub=p %}{% endfor %}
+</ol>

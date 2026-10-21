@@ -1,0 +1,29 @@
+---
+title: CV
+permalink: /cv/
+---
+{%- assign cv = site.data.cv %}
+<h2>Education</h2>
+<ol class="cv-list">
+  {%- for item in cv.education %}{% include timeline-item.html item=item %}{% endfor %}
+</ol>
+
+<h2>Research experience</h2>
+<ol class="cv-list">
+  {%- for item in cv.positions %}{% include timeline-item.html item=item %}{% endfor %}
+</ol>
+
+<h2>Talks</h2>
+<ol class="cv-list">
+  {%- for t in cv.talks %}
+  <li class="cv-row">
+    <span class="cv-row__when">{{ t.when }}</span>
+    <div class="cv-row__what">
+      <p class="cv-row__role">{{ t.what }}</p>
+      <p class="cv-row__org">{{ t.where }}</p>
+    </div>
+  </li>
+  {%- endfor %}
+</ol>
+
+<p class="page-links"><a href="{{ '/publications/' | relative_url }}">Publications</a></p>

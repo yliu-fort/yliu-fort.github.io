@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Portrait tool</title>
+<style>
+  :root {
+    --bg: #fcfcfa; --panel: #ffffff; --text: #222; --muted: #6b6b6b; --rule: #e3e1dc;
+    --frame-bg: #f4f3ef; --link: #1f4e79; --danger: #9b2c2c;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --serif: "Source Serif 4", Georgia, serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161616; --panel: #1d1d1c; --text: #dcdad5; --muted: #9a978f; --rule: #2e2d2a;
+            --frame-bg: #201f1d; --link: #8fb6dc; --danger: #e08a8a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 var(--sans); }
+  header { padding: 18px 24px; border-bottom: 1px solid var(--rule); }
+  header h1 { margin: 0; font: 600 18px/1.3 var(--serif); }
+  header p { margin: 4px 0 0; color: var(--muted); }
+  main { display: grid; grid-template-columns: 290px minmax(0, 1fr) 300px; gap: 28px; padding: 24px; align-items: start; }
+  @media (max-width: 1100px) { main { grid-template-columns: 290px minmax(0, 1fr); } .previews { grid-column: 1 / -1; } }
+  @media (max-width: 720px) { main { grid-template-columns: minmax(0, 1fr); } }
+
+  h2 { margin: 22px 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  h2:first-child { margin-top: 0; }
+  label.row { display: grid; grid-template-columns: 82px minmax(0, 1fr) 40px; align-items: center; gap: 8px; margin: 6px 0; }
+  label.row output { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+  input[type=range] { width: 100%; }
+  .check { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  button, .file-button {
+    font: inherit; padding: 6px 12px; border-radius: 4px; cursor: pointer;
+    border: 1px solid var(--rule); background: var(--panel); color: var(--text);
+  }
+  button:hover:not(:disabled), .file-button:hover { border-color: var(--muted); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.primary { background: var(--text); border-color: var(--text); color: var(--bg); }
+  button.danger { color: var(--danger); }
+  input[type=text] { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 4px; background: var(--panel); color: var(--text); }
+  input[type=color] { width: 44px; height: 28px; padding: 0; border: 1px solid var(--rule); border-radius: 4px; background: none; }
+  .note { color: var(--muted); font-size: 13px; margin: 6px 0; }
+  .status { min-height: 1.5em; margin-top: 10px; font-size: 13px; }
+  .status.error { color: var(--danger); }
+  .file-button input { display: none; }
+
+  .stage { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .drop {
+    position: relative; width: min(100%, 420px); aspect-ratio: 2 / 3;
+    background: var(--frame-bg); border: 1px solid var(--rule); border-radius: 2px;
+    touch-action: none; user-select: none;
+  }
+  .drop.dragover { outline: 2px dashed var(--link); outline-offset: 4px; }
+  .drop canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
+  .drop canvas:active { cursor: grabbing; }
+  .drop .empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--muted); pointer-events: none; }
+  .guides { position: absolute; inset: 0; pointer-events: none; display: none;
+    background:
+      linear-gradient(to right, transparent calc(33.333% - .5px), rgba(255,255,255,.55) calc(33.333% - .5px), rgba(255,255,255,.55) calc(33.333% + .5px), transparent calc(33.333% + .5px), transparent calc(66.666% - .5px), rgba(255,255,255,.55) calc(66.666% - .5px), rgba(255,255,255,.55) calc(66.666% + .5px), transparent calc(66.666% + .5px)),
+      linear-gradient(to bottom, transparent calc(33.333% - .5px), rgba(255,255,255,.55) calc(33.333% - .5px), rgba(255,255,255,.55) calc(33.333% + .5px), transparent calc(33.333% + .5px), transparent calc(66.666% - .5px), rgba(255,255,255,.55) calc(66.666% - .5px), rgba(255,255,255,.55) calc(66.666% + .5px), transparent calc(66.666% + .5px));
+  }
+  .guides.on { display: block; }
+  .card-band { position: absolute; left: 0; right: 0; border: 1px dashed rgba(255,255,255,.8); box-shadow: 0 0 0 1px rgba(0,0,0,.25); pointer-events: none; display: none; }
+  .card-band.on { display: block; }
+  .hint { color: var(--muted); font-size: 13px; text-align: center; }
+  .warn { color: var(--danger); font-size: 13px; text-align: center; min-height: 1.4em; }
+
+  .previews h2:first-child { margin-top: 0; }
+  .mock { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; padding: 14px; border: 1px solid var(--rule); border-radius: 4px; margin-bottom: 10px; font-family: var(--serif); }
+  .mock.light { background: #fcfcfa; color: #111; }
+  .mock.dark { background: #161616; color: #f0eee9; }
+  .mock canvas { width: 96px; aspect-ratio: 2 / 3; display: block; border-radius: 2px; }
+  .mock.light canvas { background: #f4f3ef; border: 1px solid #e3e1dc; }
+  .mock.dark canvas { background: #201f1d; border: 1px solid #2e2d2a; }
+  .mock strong { display: block; font-size: 15px; }
+  .mock span { display: block; font: 12px/1.4 var(--sans); opacity: .65; }
+  .card-preview { width: 100%; aspect-ratio: 1200 / 630; display: block; border: 1px solid var(--rule); border-radius: 4px; background: var(--frame-bg); }
+  .current { display: flex; align-items: center; gap: 10px; }
+  .current img { width: 40px; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 2px; border: 1px solid var(--rule); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Portrait tool</h1>
+  <p>Frame and adjust the full-length photo for the home page. All processing happens in this browser; <em>Save to site</em> writes the result into the repository on this computer.</p>
+</header>
+
+<main>
+  <section class="controls">
+    <h2>Photo</h2>
+    <div class="buttons">
+      <label class="file-button">Choose photo…<input type="file" id="file" accept="image/*"></label>
+      <button id="edit-current" disabled>Edit current</button>
+    </div>
+    <p class="note">Or drop an image on the frame. JPEG, PNG or WebP; HEIC works in Safari.</p>
+    <div class="current" id="current"></div>
+
+    <h2>Framing</h2>
+    <label class="row">Zoom <input type="range" id="zoom" min="50" max="400" value="100"><output for="zoom"></output></label>
+    <label class="row">Rotate <input type="range" id="rot" min="-20" max="20" step="0.5" value="0"><output for="rot"></output></label>
+    <div class="buttons">
+      <button data-action="rotl">⟲ 90°</button>
+      <button data-action="rotr">⟳ 90°</button>
+      <button data-action="flip">Flip</button>
+      <button data-action="reset-frame">Reset</button>
+    </div>
+    <label class="check"><input type="checkbox" id="guides"> Show thirds</label>
+    <p class="note">Drag the photo to move it; scroll to zoom.</p>
+
+    <h2>Tone</h2>
+    <label class="row">Brightness <input type="range" id="brightness" min="-100" max="100" value="0"><output for="brightness"></output></label>
+    <label class="row">Contrast <input type="range" id="contrast" min="-100" max="100" value="0"><output for="contrast"></output></label>
+    <label class="row">Saturation <input type="range" id="saturation" min="-100" max="100" value="0"><output for="saturation"></output></label>
+    <label class="row">Warmth <input type="range" id="warmth" min="-100" max="100" value="0"><output for="warmth"></output></label>
+    <label class="check"><input type="checkbox" id="bw"> Black and white</label>
+    <label class="check">Background <input type="color" id="bg" value="#f4f3ef"> <span class="note">fills any uncovered area</span></label>
+    <div class="buttons"><button data-action="reset-tone">Reset tone</button></div>
+
+    <h2>Link preview</h2>
+    <label class="row">Position <input type="range" id="cardpos" min="0" max="100" value="4"><output for="cardpos"></output></label>
+    <label class="check"><input type="checkbox" id="showcard"> Show crop on the photo</label>
+
+    <h2>Description</h2>
+    <input type="text" id="alt" placeholder="Alt text, e.g. Portrait of Yuxuan Liu">
+
+    <h2>Save</h2>
+    <div class="buttons">
+      <button class="primary" id="save" disabled>Save to site</button>
+      <button id="download" disabled>Download files</button>
+    </div>
+    <div class="buttons"><button class="danger" id="clear">Remove portrait from site</button></div>
+    <div class="status" id="status"></div>
+  </section>
+
+  <section class="stage">
+    <div class="drop" id="drop">
+      <canvas id="editor" width="600" height="900"></canvas>
+      <div class="guides" id="guide-layer"></div>
+      <div class="card-band" id="card-band"></div>
+      <div class="empty" id="empty">Choose a photo or drop one here</div>
+    </div>
+    <div class="warn" id="warn"></div>
+    <p class="hint">Output: 900 × 1350 (2:3) for the home page, 1200 × 630 for link previews.</p>
+  </section>
+
+  <section class="previews">
+    <h2>Home page, light</h2>
+    <div class="mock light"><canvas class="mock-canvas" width="192" height="288"></canvas><div><strong>Yuxuan Liu</strong><span>DPhil, University of Oxford</span></div></div>
+    <h2>Home page, dark</h2>
+    <div class="mock dark"><canvas class="mock-canvas" width="192" height="288"></canvas><div><strong>Yuxuan Liu</strong><span>DPhil, University of Oxford</span></div></div>
+    <h2>Link preview</h2>
+    <canvas class="card-preview" id="card" width="600" height="315"></canvas>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  const TOKEN = "__TOKEN__";
+  const ONLINE = location.protocol.startsWith("http") && !TOKEN.startsWith("__");
+  const OUT_W = 900, OUT_H = 1350, CARD_W = 1200, CARD_H = 630, MAX_SRC = 3200;
+
+  const $ = (id) => document.getElementById(id);
+  const editor = $("editor"), ectx = editor.getContext("2d");
+  const statusEl = $("status");
+
+  const defaults = {
+    frame: { zoom: 1, rot: 0, quarter: 0, flip: false, dx: 0, dy: 0 },
+    tone: { brightness: 0, contrast: 0, saturation: 0, warmth: 0, bw: false },
+  };
+  const state = {
+    src: null, srcName: "",
+    frame: { ...defaults.frame },
+    tone: { ...defaults.tone },
+    bg: "#f4f3ef", cardPos: 0.04,
+  };
+
+  function setStatus(msg, isError) {
+    statusEl.textContent = msg;
+    statusEl.className = "status" + (isError ? " error" : "");
+  }
+
+  // ---------- Loading ----------
+
+  async function loadBlob(blob, name) {
+    const url = URL.createObjectURL(blob);
+    try {
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+      // Downscale very large photos once, so editing stays responsive.
+      const scale = Math.min(1, MAX_SRC / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * scale);
+      c.height = Math.round(img.naturalHeight * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      state.src = c;
+      state.srcName = name || "photo";
+      state.frame = { ...defaults.frame };
+      syncInputs();
+      $("empty").style.display = "none";
+      $("save").disabled = !ONLINE;
+      $("download").disabled = false;
+      setStatus(`Loaded ${state.srcName} (${img.naturalWidth} × ${img.naturalHeight}).`);
+      render();
+    } catch (err) {
+      setStatus("Could not read that image. Try a JPEG or PNG.", true);
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  $("file").addEventListener("change", (e) => {
+    const f = e.target.files[0];
+    if (f) loadBlob(f, f.name);
+    e.target.value = "";
+  });
+
+  const drop = $("drop");
+  ["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("dragover"); }));
+  ["dragleave", "drop"].forEach((t) => drop.addEventListener(t, () => drop.classList.remove("dragover")));
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const f = [...e.dataTransfer.files].find((x) => x.type.startsWith("image/"));
+    if (f) loadBlob(f, f.name);
+  });
+
+  $("edit-current").addEventListener("click", async () => {
+    const res = await fetch("/current.jpg?" + Date.now());
+    if (res.ok) loadBlob(await res.blob(), "current portrait");
+  });
+
+  // ---------- Rendering ----------
+
+  function drawFrame(ctx, W, H) {
+    const f = state.frame, src = state.src;
+    ctx.save();
+    ctx.fillStyle = state.bg;
+    ctx.fillRect(0, 0, W, H);
+    if (src) {
+      const odd = f.quarter % 2 === 1;
+      const iw = odd ? src.height : src.width, ih = odd ? src.width : src.height;
+      const s = Math.max(W / iw, H / ih) * f.zoom;
+      ctx.imageSmoothingQuality = "high";
+      ctx.translate(W / 2 + f.dx * W, H / 2 + f.dy * H);
+      ctx.rotate(((f.quarter * 90 + f.rot) * Math.PI) / 180);
+      ctx.scale(f.flip ? -s : s, s);
+      ctx.drawImage(src, -src.width / 2, -src.height / 2);
+    }
+    ctx.restore();
+    applyTone(ctx, W, H);
+  }
+
+  function applyTone(ctx, W, H) {
+    const t = state.tone;
+    if (!t.brightness && !t.contrast && !t.saturation && !t.warmth && !t.bw) return;
+    const img = ctx.getImageData(0, 0, W, H), d = img.data;
+    const br = 1 + t.brightness / 200;
+    const c = t.contrast * 2.55;
+    const cf = (259 * (c + 255)) / (255 * (259 - c));
+    const sat = t.bw ? 0 : 1 + t.saturation / 100;
+    const warm = t.warmth * 0.25;
+    for (let i = 0; i < d.length; i += 4) {
+      let r = cf * (d[i] * br - 128) + 128;
+      let g = cf * (d[i + 1] * br - 128) + 128;
+      let b = cf * (d[i + 2] * br - 128) + 128;
+      const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      d[i] = L + (r - L) * sat + warm;
+      d[i + 1] = L + (g - L) * sat;
+      d[i + 2] = L + (b - L) * sat - warm;
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  let pending = false;
+  function render() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => {
+      pending = false;
+      drawFrame(ectx, editor.width, editor.height);
+      document.querySelectorAll(".mock").forEach((m) => {
+        const c = m.querySelector("canvas");
+        if (!state.src) return;
+        c.getContext("2d").drawImage(editor, 0, 0, c.width, c.height);
+      });
+      drawCard($("card").getContext("2d"), $("card").width, $("card").height, editor);
+      updateCardBand();
+      updateWarning();
+    });
+  }
+
+  function cardRect(W, H) {
+    const h = W * CARD_H / CARD_W;
+    return { x: 0, y: state.cardPos * (H - h), w: W, h };
+  }
+
+  function drawCard(ctx, W, H, from) {
+    const r = cardRect(from.width, from.height);
+    ctx.fillStyle = state.bg;
+    ctx.fillRect(0, 0, W, H);
+    if (state.src) ctx.drawImage(from, r.x, r.y, r.w, r.h, 0, 0, W, H);
+  }
+
+  function updateCardBand() {
+    const band = $("card-band");
+    band.classList.toggle("on", $("showcard").checked && !!state.src);
+    const r = cardRect(1, 1.5);
+    band.style.top = (r.y / 1.5 * 100) + "%";
+    band.style.height = (r.h / 1.5 * 100) + "%";
+  }
+
+  function updateWarning() {
+    const src = state.src, f = state.frame;
+    if (!src) { $("warn").textContent = ""; return; }
+    const odd = f.quarter % 2 === 1;
+    const iw = odd ? src.height : src.width, ih = odd ? src.width : src.height;
+    const s = Math.max(OUT_W / iw, OUT_H / ih) * f.zoom;
+    $("warn").textContent = s > 1.15
+      ? `Low resolution: the photo is enlarged ${Math.round(s * 100)}% at the output size.` : "";
+  }
+
+  // ---------- Interaction ----------
+
+  let drag = null;
+  editor.addEventListener("pointerdown", (e) => {
+    if (!state.src) return;
+    editor.setPointerCapture(e.pointerId);
+    drag = { x: e.clientX, y: e.clientY };
+  });
+  editor.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const rect = editor.getBoundingClientRect();
+    state.frame.dx += (e.clientX - drag.x) / rect.width;
+    state.frame.dy += (e.clientY - drag.y) / rect.height;
+    drag = { x: e.clientX, y: e.clientY };
+    render();
+  });
+  ["pointerup", "pointercancel"].forEach((t) => editor.addEventListener(t, () => { drag = null; }));
+  editor.addEventListener("wheel", (e) => {
+    if (!state.src) return;
+    e.preventDefault();
+    state.frame.zoom = Math.min(4, Math.max(0.5, state.frame.zoom * Math.exp(-e.deltaY * 0.0015)));
+    syncInputs();
+    render();
+  }, { passive: false });
+
+  const sliders = {
+    zoom: [(v) => (state.frame.zoom = v / 100), () => Math.round(state.frame.zoom * 100), (v) => v + "%"],
+    rot: [(v) => (state.frame.rot = +v), () => state.frame.rot, (v) => v + "°"],
+    brightness: [(v) => (state.tone.brightness = +v), () => state.tone.brightness, String],
+    contrast: [(v) => (state.tone.contrast = +v), () => state.tone.contrast, String],
+    saturation: [(v) => (state.tone.saturation = +v), () => state.tone.saturation, String],
+    warmth: [(v) => (state.tone.warmth = +v), () => state.tone.warmth, String],
+    cardpos: [(v) => (state.cardPos = v / 100), () => Math.round(state.cardPos * 100), (v) => v + "%"],
+  };
+  Object.entries(sliders).forEach(([id, [set, , fmt]]) => {
+    $(id).addEventListener("input", (e) => {
+      set(e.target.value);
+      e.target.nextElementSibling.textContent = fmt(e.target.value);
+      render();
+    });
+  });
+
+  function syncInputs() {
+    Object.entries(sliders).forEach(([id, [, get, fmt]]) => {
+      $(id).value = get();
+      $(id).nextElementSibling.textContent = fmt(get());
+    });
+    $("bw").checked = state.tone.bw;
+    $("bg").value = state.bg;
+  }
+
+  $("bw").addEventListener("change", (e) => { state.tone.bw = e.target.checked; render(); });
+  $("bg").addEventListener("input", (e) => { state.bg = e.target.value; render(); });
+  $("guides").addEventListener("change", (e) => $("guide-layer").classList.toggle("on", e.target.checked));
+  $("showcard").addEventListener("change", updateCardBand);
+
+  document.querySelectorAll("[data-action]").forEach((b) => b.addEventListener("click", () => {
+    const f = state.frame;
+    switch (b.dataset.action) {
+      case "rotl": f.quarter = (f.quarter + 3) % 4; break;
+      case "rotr": f.quarter = (f.quarter + 1) % 4; break;
+      case "flip": f.flip = !f.flip; break;
+      case "reset-frame": state.frame = { ...defaults.frame }; break;
+      case "reset-tone": state.tone = { ...defaults.tone }; state.bg = "#f4f3ef"; break;
+    }
+    syncInputs();
+    render();
+  }));
+
+  // ---------- Export ----------
+
+  function canvasBlob(canvas, type, quality) {
+    return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+  }
+  function blobToDataURL(blob) {
+    return new Promise((resolve) => { const r = new FileReader(); r.onload = () => resolve(r.result); r.readAsDataURL(blob); });
+  }
+
+  async function exportFiles() {
+    const full = document.createElement("canvas");
+    full.width = OUT_W; full.height = OUT_H;
+    drawFrame(full.getContext("2d"), OUT_W, OUT_H);
+    const card = document.createElement("canvas");
+    card.width = CARD_W; card.height = CARD_H;
+    drawCard(card.getContext("2d"), CARD_W, CARD_H, full);
+    const jpg = await canvasBlob(full, "image/jpeg", 0.86);
+    let webp = await canvasBlob(full, "image/webp", 0.84);
+    if (!webp || webp.type !== "image/webp") webp = null;   // e.g. Safari cannot encode WebP
+    const cardJpg = await canvasBlob(card, "image/jpeg", 0.86);
+    return { jpg, webp, card: cardJpg };
+  }
+
+  $("save").addEventListener("click", async () => {
+    if (!state.src) return;
+    $("save").disabled = true;
+    setStatus("Saving…");
+    try {
+      const files = await exportFiles();
+      const body = {
+        jpg: await blobToDataURL(files.jpg),
+        webp: files.webp ? await blobToDataURL(files.webp) : null,
+        card: await blobToDataURL(files.card),
+        alt: $("alt").value.trim(),
+      };
+      const res = await fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Portrait-Token": TOKEN },
+        body: JSON.stringify(body),
+      });
+      const out = await res.json();
+      if (!res.ok) throw new Error(out.error || res.statusText);
+      const kb = Math.round(files.jpg.size / 1024);
+      setStatus(`Saved (${kb} KB): ${out.written.join(", ")}. Preview with scripts/serve.sh, then commit and push.`);
+      refreshCurrent();
+    } catch (err) {
+      setStatus("Save failed: " + err.message, true);
+    } finally {
+      $("save").disabled = !ONLINE || !state.src;
+    }
+  });
+
+  $("download").addEventListener("click", async () => {
+    if (!state.src) return;
+    const files = await exportFiles();
+    const list = [["portrait.jpg", files.jpg], ["portrait-card.jpg", files.card]];
+    if (files.webp) list.push(["portrait.webp", files.webp]);
+    for (const [name, blob] of list) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    }
+    setStatus("Downloaded. Put the files in assets/images/ and fill in _data/portrait.yml.");
+  });
+
+  $("clear").addEventListener("click", async () => {
+    if (!confirm("Remove the portrait files from the site? The home page will show a blank frame.")) return;
+    try {
+      const res = await fetch("/api/clear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Portrait-Token": TOKEN },
+        body: "{}",
+      });
+      const out = await res.json();
+      if (!res.ok) throw new Error(out.error || res.statusText);
+      setStatus(out.removed.length ? "Removed " + out.removed.join(", ") + "." : "There was no portrait to remove.");
+      refreshCurrent();
+    } catch (err) {
+      setStatus("Remove failed: " + err.message, true);
+    }
+  });
+
+  async function refreshCurrent() {
+    const box = $("current");
+    if (!ONLINE) {
+      box.innerHTML = '<span class="note">Opened without scripts/portrait.py: only Download is available.</span>';
+      $("clear").disabled = true;
+      return;
+    }
+    const st = await (await fetch("/api/state")).json();
+    $("edit-current").disabled = !st.exists;
+    $("clear").disabled = !st.exists;
+    box.innerHTML = st.exists
+      ? `<img src="/current.jpg?${st.version}" alt=""><span class="note">Current portrait on the site</span>`
+      : '<span class="note">The site currently shows a blank frame.</span>';
+    if (st.alt && !$("alt").value) $("alt").value = st.alt;
+  }
+
+  window.portraitTool = { loadBlob, state, render };
+  syncInputs();
+  render();
+  refreshCurrent();
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,33 @@
 ---
-# You don't need to edit this file, it's empty on purpose.
-# Edit theme's home layout instead if you wanna make some changes
-# See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 layout: home
-author_profile: true
 ---
+<section class="intro">
+  <p>
+    I work on ocean waves, numerical methods and machine learning. My DPhil in Engineering
+    Science at the University of Oxford was on data-driven modelling of nonlinear surface waves,
+    including machine-learning closures for wave breaking in envelope-type wave models. I have
+    since worked on optimal control of tidal range schemes and on wave–current modelling for
+    offshore renewable energy, and more recently on attention mechanisms for sequence models.
+  </p>
+  <p>This site collects my notes and papers.</p>
+</section>
+
+{%- if site.posts.size > 0 %}
+<section class="home-section">
+  <h2 class="section-label">Recent posts</h2>
+  {% include post-list.html posts=site.posts limit=site.home_posts %}
+  {%- if site.posts.size > site.home_posts %}
+  <p class="more"><a href="{{ '/blog/' | relative_url }}">All posts</a></p>
+  {%- endif %}
+</section>
+{%- endif %}
+
+<section class="home-section">
+  <h2 class="section-label">Selected publications</h2>
+  {%- assign pubs = site.data.publications %}
+  <ol class="pub-list">
+    {%- for p in pubs.preprints %}{% if p.selected %}{% include publication.html pub=p %}{% endif %}{% endfor %}
+    {%- for p in pubs.articles %}{% if p.selected %}{% include publication.html pub=p %}{% endif %}{% endfor %}
+  </ol>
+  <p class="more"><a href="{{ '/publications/' | relative_url }}">All publications</a></p>
+</section>

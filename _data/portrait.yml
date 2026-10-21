@@ -1,0 +1,7 @@
+# Home-page portrait. Written by scripts/portrait.py; edit with that tool.
+# An empty `image` leaves the frame on the home page blank.
+image: ""
+webp: ""
+card: ""
+alt: ""
+version: 0

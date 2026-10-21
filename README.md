@@ -1,27 +1,14 @@
-# Minimal Mistakes remote theme starter
+# yliu-fort.github.io
 
-Click [**Use this template**](https://github.com/mmistakes/mm-github-pages-starter/generate) button above for the quickest method of getting started with the [Minimal Mistakes Jekyll theme](https://github.com/mmistakes/minimal-mistakes).
+Personal site and blog of Yuxuan Liu, served by GitHub Pages from the `dev` branch at
+<https://yliu-fort.github.io>.
 
-Contains basic configuration to get you a site with:
+Posts are Markdown files with LaTeX (MathJax), figures and code. How to write, preview and
+publish a post is described in [AGENTS.md](AGENTS.md).
 
-- Sample posts.
-- Sample top navigation.
-- Sample author sidebar with social links.
-- Sample footer links.
-- Paginated home page.
-- Archive pages for posts grouped by year, category, and tag.
-- Sample about page.
-- Sample 404 page.
-- Site wide search.
-
-Replace sample content with your own and [configure as necessary](https://mmistakes.github.io/minimal-mistakes/docs/configuration/).
-
----
-
-## Troubleshooting
-
-If you have a question about using Jekyll, start a discussion on the [Jekyll Forum](https://talk.jekyllrb.com/) or [StackOverflow](https://stackoverflow.com/questions/tagged/jekyll). Other resources:
-
-- [Ruby 101](https://jekyllrb.com/docs/ruby-101/)
-- [Setting up a Jekyll site with GitHub Pages](https://jekyllrb.com/docs/github-pages/)
-- [Configuring GitHub Metadata](https://github.com/jekyll/github-metadata/blob/master/docs/configuration.md#configuration) to work properly when developing locally and avoid `No GitHub API authentication could be found. Some fields may be missing or have incorrect data.` warnings.
+```bash
+scripts/new-post.sh "Post title"      # start a draft
+scripts/serve.sh                      # preview at http://localhost:4000
+scripts/publish-post.sh <slug>        # check and move into _posts/
+scripts/portrait.py                   # set the home-page portrait
+```

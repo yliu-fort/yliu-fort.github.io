@@ -1,0 +1,19 @@
+---
+title: Blog
+permalink: /blog/
+lede: Notes on ocean waves, numerical methods and machine learning.
+---
+{%- if site.posts.size > 0 %}
+{%- assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+{%- for year in years %}
+<h2 class="year-label">{{ year.name }}</h2>
+{% include post-list.html posts=year.items %}
+{%- endfor %}
+{%- else %}
+<p class="muted">No posts yet.</p>
+{%- endif %}
+
+<p class="page-links">
+  <a href="{{ '/blog/tags/' | relative_url }}">Browse by tag</a>
+  <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a>
+</p>

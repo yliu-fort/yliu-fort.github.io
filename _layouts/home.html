@@ -1,0 +1,34 @@
+---
+layout: default
+---
+{%- assign portrait = site.data.portrait -%}
+<div class="home">
+  <aside class="profile">
+    <div class="profile__frame">
+      {%- if portrait.image and portrait.image != "" %}
+      <picture>
+        {%- if portrait.webp and portrait.webp != "" %}
+        <source srcset="{{ portrait.webp | relative_url }}?v={{ portrait.version }}" type="image/webp">
+        {%- endif %}
+        <img class="profile__portrait" src="{{ portrait.image | relative_url }}?v={{ portrait.version }}" width="900" height="1350"
+             alt="{{ portrait.alt | default: site.author.name | escape }}">
+      </picture>
+      {%- else %}
+      <div class="profile__portrait profile__portrait--empty" aria-hidden="true"></div>
+      {%- endif %}
+    </div>
+    <h1 class="profile__name">{{ site.author.name }}</h1>
+    <p class="profile__role">DPhil, University of Oxford</p>
+    <ul class="profile__links">
+      <li><a href="mailto:{{ site.links.email }}">{% include icon.html name="mail" %}<span>Email</span></a></li>
+      <li><a href="https://github.com/{{ site.links.github }}">{% include icon.html name="github" %}<span>GitHub</span></a></li>
+      <li><a href="https://orcid.org/{{ site.links.orcid }}">{% include icon.html name="orcid" %}<span>ORCID</span></a></li>
+      <li><a href="https://www.linkedin.com/in/{{ site.links.linkedin }}">{% include icon.html name="linkedin" %}<span>LinkedIn</span></a></li>
+      <li><a href="https://scholar.google.com/citations?user={{ site.links.scholar }}">{% include icon.html name="scholar" %}<span>Google Scholar</span></a></li>
+    </ul>
+  </aside>
+
+  <div class="home__main">
+    {{ content }}
+  </div>
+</div>

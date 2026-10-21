@@ -1,104 +1,83 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-
 # Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
-title: Repository
-email: liu.yuxu@husky.neu.edu
-description: >- # this means to ignore newlines until "baseurl:"
-  My personal homepage for sharing my thoughts.
-twitter_username: noname
-github_username: yliu-fort
-minimal_mistakes_skin: sunrise
-search: true
-
-# Build settings
-markdown: kramdown
-remote_theme: mmistakes/minimal-mistakes
-# Outputting
-permalink: /:categories/:title/
-paginate: 5 # amount of posts to show
-paginate_path: /page:num/
-timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-
-include:
-  - _pages
-
-# Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
-
-# Plugins (previously gems:)
-plugins:
-  - jekyll-paginate
-  - jekyll-sitemap
-  - jekyll-gist
-  - jekyll-feed
-  - jemoji
-  - jekyll-include-cache
+title: Yuxuan Liu
+description: >-
+  Notes and papers by Yuxuan Liu on ocean waves, numerical methods
+  and machine learning.
+url: "https://yliu-fort.github.io"
+baseurl: ""
+lang: en
+timezone: Europe/London
 
 author:
-  name   : "Y L"
-  avatar : "/assets/images/bio-photo.jpg"
-  bio    : "I am a passionate PhD student."
-  links:
-    - label: "Email"
-      icon: "far fa-fw fa-envelope"
-      url: "mailto:liu.yuxu@husky.neu.edu"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/yliu-fort"
+  name: Yuxuan Liu
 
-footer:
+# Profile links (sidebar, footer, structured data)
+links:
+  email: liuyx430@gmail.com
+  github: yliu-fort
+  orcid: 0000-0002-4880-2374
+  linkedin: liu-yuxuan-19566184
+  scholar: d9K4mpUAAAAJ
+
+social:
+  name: Yuxuan Liu
   links:
-    - label: "Email"
-      icon: "far fa-fw fa-envelope"
-      url: "mailto:liu.yuxu@husky.neu.edu"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/yliu-fort"
+    - https://orcid.org/0000-0002-4880-2374
+    - https://github.com/yliu-fort
+    - https://www.linkedin.com/in/liu-yuxuan-19566184
+    - https://scholar.google.com/citations?user=d9K4mpUAAAAJ
+
+# Blog
+permalink: /blog/:year/:title/
+home_posts: 6            # posts listed on the home page
+
+# Markdown. GitHub Pages forces GFM input, MathJax math and Rouge highlighting;
+# they are spelled out here so local builds behave the same way.
+markdown: kramdown
+kramdown:
+  input: GFM
+  math_engine: mathjax
+  syntax_highlighter: rouge
+  hard_wrap: false
+  auto_ids: true
 
 defaults:
-  # _posts
   - scope:
       path: ""
       type: posts
     values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: true
-      share: true
-      related: true
-  # _pages
+      layout: post
+      mathjax: true
+      toc: false
+      cite: true
+  - scope:
+      path: "_drafts"
+    values:
+      layout: post
+      mathjax: true
+      toc: false
+      cite: true
   - scope:
       path: "_pages"
       type: pages
     values:
-      layout: single
-      author_profile: true
+      layout: page
 
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
+include:
+  - _pages
+
+exclude:
+  - README.md
+  - AGENTS.md
+  - CLAUDE.md
+  - scripts/
+  - Gemfile
+  - Gemfile.lock
+  - resume/
+  - vendor/
+  - .DS_Store
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
